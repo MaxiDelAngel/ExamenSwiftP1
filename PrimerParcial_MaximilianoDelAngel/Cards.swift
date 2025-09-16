@@ -39,7 +39,7 @@ struct Cards: View {
                 Button(
                     action: {
                         withAnimation(.easeInOut(duration: 1.0)) {
-                            bandera = true
+                            bandera.toggle()
                             rotationAngle += 360
                         }
                     })

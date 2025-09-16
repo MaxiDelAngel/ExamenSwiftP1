@@ -13,7 +13,7 @@ struct Cards: View {
     @State var dueño: String = ""
     @State var num: String = "1234 5678 9012"
     @State var color: Color = .blue
-    @State var bandera: Bool = false
+    @State var bandera: Bool = true
     @State var visa: Bool = false
     @State var mastercard: Bool = false
     @State private var rotationAngle: Double = 0.0
@@ -32,10 +32,12 @@ struct Cards: View {
                         .padding([.bottom], 10.0)
                         .padding(.leading, 10.0)
                 }
-                Text(num)
-                    .font(.system(size: 16, weight: .regular, design: .default)).foregroundStyle(.white).padding(.bottom, 1.0).fontWeight(.bold)
-                Text(dueño)
-                    .font(.system(size: 14, weight: .regular, design: .default)).foregroundStyle(.white).padding(.bottom, 1.0)
+                if(bandera){
+                    Text(num)
+                        .font(.system(size: 16, weight: .regular, design: .default)).foregroundStyle(.white).padding(.bottom, 1.0).fontWeight(.bold)
+                    Text(dueño)
+                        .font(.system(size: 14, weight: .regular, design: .default)).foregroundStyle(.white).padding(.bottom, 1.0)
+                }
                 Button(
                     action: {
                         withAnimation(.easeInOut(duration: 1.0)) {
@@ -81,7 +83,7 @@ struct Cards: View {
         .padding(.all, 20.0)
         .frame(maxWidth: .infinity)
         .frame(height: 150)
-        .background(bandera ? .gray : color)
+        .background(bandera ? color : .gray)
         .cornerRadius(10)
         .rotationEffect(Angle(degrees: rotationAngle))
     }

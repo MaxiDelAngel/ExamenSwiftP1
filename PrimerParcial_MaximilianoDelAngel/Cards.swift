@@ -16,7 +16,13 @@ struct Cards: View {
     @State var bandera: Bool = true
     @State var visa: Bool = false
     @State var mastercard: Bool = false
-    @State private var rotationAngle: Double = 0.0
+    @State var pressed: Bool = false
+    @Binding var onClick: Bool
+    
+    func CardPresionada() -> CGFloat {
+        return pressed ? 180 : 0
+    }
+    
     var body: some View {
         HStack(alignment: .top){
             VStack(alignment: .leading){
@@ -42,7 +48,7 @@ struct Cards: View {
                     action: {
                         withAnimation(.easeInOut(duration: 1.0)) {
                             bandera.toggle()
-                            rotationAngle += 360
+                            pressed.toggle()
                         }
                     })
                 {
@@ -80,16 +86,14 @@ struct Cards: View {
                 .frame(width: 25, height: 25)
                 .foregroundStyle(.white)
         }
-        .padding(.all, 20.0)
-        .frame(maxWidth: .infinity)
-        .frame(height: 150)
-        .background(bandera ? color : .gray)
+        .modifier(CardCanvas())
+        .background(onClick ? color : .gray)
         .cornerRadius(10)
-        .rotationEffect(Angle(degrees: rotationAngle))
+        .rotationEffect(.degrees(CardPresionada()))
     }
 }
 
 
 #Preview {
-    Cards(nombre: "NU", icon: "nu", dueño: "Maximiliano Del Angel", num: "1234 5678 9012", color: .purple, visa: true)
+    Cards(nombre: "NU", icon: "nu", dueño: "Maximiliano Del Angel", num: "1234 5678 9012", color: .purple, visa: true, onClick: .constant(true))
 }

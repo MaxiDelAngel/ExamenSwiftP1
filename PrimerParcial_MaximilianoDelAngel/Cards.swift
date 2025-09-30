@@ -18,7 +18,11 @@ struct Cards: View {
     @State var mastercard: Bool = false
     @State var pressed: Bool = false
     @Binding var onClick: Bool
-    
+    @Binding var tarjetaPreferida: String?
+    @State private var mostrarAlerta: Bool = false
+    var esLaPreferida: Bool {
+        return nombre == tarjetaPreferida
+    }
     func CardPresionada() -> CGFloat {
         return pressed ? 180 : 0
     }
@@ -80,6 +84,21 @@ struct Cards: View {
                 }.padding(.all, 5.0).background(Color("primarycolor")).cornerRadius(10)
             }
             Spacer()
+            Button(action: {
+                if self.esLaPreferida {
+                    tarjetaPreferida = nil
+                } else {
+                    tarjetaPreferida = nombre
+                    mostrarAlerta = true
+                }
+            }) {
+                Image(systemName: esLaPreferida ? "heart.fill" : "heart")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 25, height: 25)
+                    .foregroundStyle(esLaPreferida ? .red : .white)
+            }
+            Spacer()
             Image("fc5176b1582ca87736c2b19dd6d20472f49bb4b96ed81f29da59865351ea0e06")
                 .resizable()
                 .scaledToFit()
@@ -90,10 +109,15 @@ struct Cards: View {
         .background(onClick ? color : .gray)
         .cornerRadius(10)
         .rotationEffect(.degrees(CardPresionada()))
+        .alert(isPresented: $mostrarAlerta) {
+                Alert(
+                    title: Text("Tarjeta de \(nombre)"),
+                    message: Text("Ha sido establecido como método preferido de pago exitosamente"),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
     }
 }
 
 
-#Preview {
-    Cards(nombre: "NU", icon: "nu", dueño: "Maximiliano Del Angel", num: "1234 5678 9012", color: .purple, visa: true, onClick: .constant(true))
-}
+

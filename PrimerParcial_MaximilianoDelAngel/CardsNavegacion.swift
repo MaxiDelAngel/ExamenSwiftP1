@@ -1,20 +1,32 @@
 //
-//  PruebaCard.swift
+//  CardsNavegacion.swift
 //  PrimerParcial_MaximilianoDelAngel
 //
-//  Created by WIN603 on 15/09/25.
+//  Created by WIN603 on 06/10/25.
 //
 
 import SwiftUI
 
-struct PruebaCard: View {
+struct CardsNavegacion: View {
     @State var nombre: String = ""
     @State var icon: String = ""
     @State var dueño: String = ""
+    @State var num: String = "1234 5678 9012"
     @State var color: Color = .blue
+    @State var bandera: Bool = true
     @State var visa: Bool = false
     @State var mastercard: Bool = false
-    @State private var rotationAngle: Double = 0.0
+    @State var pressed: Bool = false
+    @Binding var onClick: Bool
+    @Binding var tarjetaPreferida: String?
+    @State private var mostrarAlerta: Bool = false
+    var esLaPreferida: Bool {
+        return nombre == tarjetaPreferida
+    }
+    func CardPresionada() -> CGFloat {
+        return pressed ? 180 : 0
+    }
+    
     var body: some View {
         HStack(alignment: .top){
             VStack(alignment: .leading){
@@ -30,14 +42,17 @@ struct PruebaCard: View {
                         .padding([.bottom], 10.0)
                         .padding(.leading, 10.0)
                 }
-                Text("1234 5678 9012")
-                    .font(.system(size: 16, weight: .regular, design: .default)).foregroundStyle(.white).padding(.bottom, 1.0).fontWeight(.bold)
-                Text(dueño)
-                    .font(.system(size: 14, weight: .regular, design: .default)).foregroundStyle(.white).padding(.bottom, 1.0)
+                if(bandera){
+                    Text(num)
+                        .font(.system(size: 16, weight: .regular, design: .default)).foregroundStyle(.white).padding(.bottom, 1.0).fontWeight(.bold)
+                    Text(dueño)
+                        .font(.system(size: 14, weight: .regular, design: .default)).foregroundStyle(.white).padding(.bottom, 1.0)
+                }
                 Button(
                     action: {
                         withAnimation(.easeInOut(duration: 1.0)) {
-                            rotationAngle += 360
+                            bandera.toggle()
+                            pressed.toggle()
                         }
                     })
                 {
@@ -69,21 +84,40 @@ struct PruebaCard: View {
                 }.padding(.all, 5.0).background(Color("primarycolor")).cornerRadius(10)
             }
             Spacer()
+            Button(action: {
+                if self.esLaPreferida {
+                    tarjetaPreferida = nil
+                } else {
+                    tarjetaPreferida = nombre
+                    mostrarAlerta = true
+                }
+            }) {
+                Image(systemName: esLaPreferida ? "heart.fill" : "heart")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 25, height: 25)
+                    .foregroundStyle(esLaPreferida ? .red : .white)
+            }
+            Spacer()
             Image("fc5176b1582ca87736c2b19dd6d20472f49bb4b96ed81f29da59865351ea0e06")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 25, height: 25)
                 .foregroundStyle(.white)
         }
-        .padding(.all, 20.0)
-        .frame(maxWidth: .infinity)
-        .frame(height: 150)
-        .background(color)
+        .modifier(CardCanvas())
+        .background(onClick ? color : .gray)
         .cornerRadius(10)
-        .rotationEffect(Angle(degrees: rotationAngle))
+        .rotationEffect(.degrees(CardPresionada()))
+        .alert(isPresented: $mostrarAlerta) {
+            Alert(
+                title: Text("Tarjeta de \(nombre)"),
+                message: Text("Ha sido establecido como método preferido de pago exitosamente"),
+                dismissButton: .default(Text("OK"))
+            )
+        }
     }
 }
 
-#Preview {
-    PruebaCard(nombre: "NU", icon: "nu", dueño: "Maximiliano Del Angel", color: .purple)
-}
+
+

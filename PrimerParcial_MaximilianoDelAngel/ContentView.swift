@@ -27,7 +27,7 @@ struct ContentView: View {
                         }
                     }
                 Spacer()
-                Cards(nombre: "NU", icon: "nu", dueño: "Maximiliano Del Angel", num: "1232 7678 1012", color: .purple, visa: true, onClick: $clickteOnRing, tarjetaPreferida: $tarjetaPreferida)
+                CardsNavegacion(nombre: "NU", icon: "nu", dueño: "Maximiliano Del Angel", num: "1232 7678 1012", color: .purple, visa: true, onClick: $clickteOnRing, tarjetaPreferida: $tarjetaPreferida)
                 
                 Cards(nombre: "MercadoPago", icon: "mercapago", dueño: "Maximiliano Del Angel",num: "1334 2678 1012", color: .blue, visa: true,onClick: $clickteOnRing, tarjetaPreferida: $tarjetaPreferida).zIndex(1).offset(y:-10)
                 
